@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import ContentContainer from "./components/ui/ContentContainer";
 import Slots from "./components/Slots";
 import data from "./components/data/data";
-
 import LastBooking from "./components/LastBooking";
 import { Seats } from "./components/Seats";
+
 
 function App() {
   // initial state for our app for post request
@@ -47,7 +47,7 @@ function App() {
 
   // this functions tells us to clear the db
   const deleteData = () => {
-    fetch("https://bmss-production.up.railway.app/api/booking", {
+    fetch(process.env.REACT_APP_REQUESTURL, {
       method: "DELETE",
     })
       // .then((res) => console.log(res))
@@ -57,15 +57,15 @@ function App() {
 
   // this function fetches the last booking and update the state for displaying of it
   const getData = async () => {
-    return fetch("https://bmss-production.up.railway.app/api/booking")
+    return fetch(process.env.REACT_APP_REQUESTURL)
       .then((data) => data.json())
       .then((data) => setfetchedData(data))
       .catch((err) => console.log(err));
   };
 
   // this function sends the collected state to the db and updates it further gives a response of the last booking
-  const handelPost = async (data) => {
-    return fetch("https://bmss-production.up.railway.app/api/booking", {
+  const handlePost = async (data) => {
+    return fetch(process.env.REACT_APP_REQUESTURL, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -114,7 +114,7 @@ function App() {
       alert("Please select every field to continue further");
       return;
     }
-    return handelPost(movieData);
+    return handlePost(movieData);
   };
 
   return (
