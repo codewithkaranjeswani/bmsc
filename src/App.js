@@ -6,7 +6,6 @@ import data from "./components/data/data";
 import LastBooking from "./components/LastBooking";
 import { Seats } from "./components/Seats";
 
-
 function App() {
   // initial state for our app for post request
   const [movieData, setmovieData] = useState({
@@ -16,6 +15,7 @@ function App() {
   });
 
   const [fetchedData, setfetchedData] = useState([]);
+  const [resetVal, setResetVal] = useState(false);
 
   // requiring the data provided by almabetter for our app
   const { movies, slots, seats } = data;
@@ -25,6 +25,9 @@ function App() {
     const findSeat = movieData.seat.findIndex(
       (el) => el.seatName === seatData.seatName
     );
+    // console.log(`seatData =`);
+    // console.log(seatData);
+    // console.log(`findseat = ${findSeat}`);
 
     if (findSeat !== -1) {
       const newSeatData = [...movieData.seat];
@@ -43,6 +46,7 @@ function App() {
         };
       });
     }
+    setResetVal(false);
   };
 
   // this functions tells us to clear the db
@@ -79,7 +83,6 @@ function App() {
       .then((data) => {
         return setfetchedData(data);
       })
-
       .catch((err) => console.log(err));
   };
 
@@ -114,7 +117,13 @@ function App() {
       alert("Please select every field to continue further");
       return;
     }
-    return handlePost(movieData);
+    handlePost(movieData);
+    setmovieData({
+      movie: "",
+      timeSlot: "",
+      seat: [],
+    });
+    setResetVal(true);
   };
 
   return (
@@ -144,9 +153,17 @@ function App() {
           </ContentContainer>
 
           <ContentContainer label={"Select the Seats"}>
-            <Seats seats={seats} cb={handleSeats} data={fetchedData} />
+            <Seats seats={seats} cb={handleSeats} resetVal={resetVal}/>
           </ContentContainer>
 
+          {/* <div>
+            movieData = movie = {movieData.movie}, seat ={" "}
+            {movieData.seat.map((item, i) => (
+              <span key={i}>{JSON.stringify(item)}, </span>
+            ))},
+            slot = {movieData.timeSlot},
+            resetVal = {resetVal}
+          </div> */}
           <div className="submit-btn">
             <button onClick={handleSubmit}>Submit!</button>
 
